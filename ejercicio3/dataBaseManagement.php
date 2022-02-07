@@ -10,18 +10,20 @@ function creaConexion (){
        return $conexion;
 }
 
-function obtenerCiudad ($Poblacion){
+function obtenerCiudad ($poblacion){
 
     try {
         $conexion = creaConexion();
 
-        $consulta =$conexion->prepare("SELECT Nombre FROM ciudades  WHERE Poblacion=?"); 
-        $consulta->bindParam(1,$Poblacion);
+        $consulta =$conexion->prepare("SELECT Nombre, Poblacion FROM ciudades  WHERE Poblacion>=?"); 
+        $consulta->bindParam(1,$poblacion);
         $consulta->execute();
         
-        $retorno = $consulta->fetch(PDO::FETCH_ASSOC);
+        while($ciudad = $consulta->fetch(PDO::FETCH_ASSOC)){
+            $resultado[]=$ciudad;
+        };
         $conexion=null;
-        return $retorno;
+        return $resultado;
 
     } catch (PDOException $e) {
         echo ("Fallo");
